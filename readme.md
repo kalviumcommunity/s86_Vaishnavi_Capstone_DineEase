@@ -4,8 +4,8 @@
 The  DineEase Hotel Management System is a full-stack web application designed to streamline restaurant table reservations within hotels. It provides separate functionalities for users and administrators, ensuring efficient management of reservations, tables, and restaurant-related information. The platform offers an intuitive and user-friendly interface with a focus on accessibility and responsive design.
 
 
-##  Key Features:
-# User Features
+#  Key Features:
+## User Features
 1. User Registration and Login: 
 - Secure user authentication using JWT (JSON Web Tokens).
 - Option for third-party login using Google.
@@ -22,7 +22,7 @@ The  DineEase Hotel Management System is a full-stack web application designed t
 - View past and upcoming reservations.
 - Cancel bookings if needed.
 
-# Admin Features
+## Admin Features
 1. Admin Registration and Login:
 - Secure admin authentication using JWT.
 - Option for third-party login using Google.
