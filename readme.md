@@ -1,13 +1,11 @@
-# Project Title:  DineEase
+# Project Title :  DineEase
 
-# Overview:
+# Overview :
 The  DineEase Hotel Management System is a full-stack web application designed to streamline restaurant table reservations within hotels. It provides separate functionalities for users and administrators, ensuring efficient management of reservations, tables, and restaurant-related information. The platform offers an intuitive and user-friendly interface with a focus on accessibility and responsive design.
 
 
-##  Key Features:
-
-# User Features -
-
+#  Key Features:
+## User Features
 1. User Registration and Login: 
 - Secure user authentication using JWT (JSON Web Tokens).
 - Option for third-party login using Google.
@@ -24,8 +22,7 @@ The  DineEase Hotel Management System is a full-stack web application designed t
 - View past and upcoming reservations.
 - Cancel bookings if needed.
 
-# Admin Features -
-
+## Admin Features
 1. Admin Registration and Login:
 - Secure admin authentication using JWT.
 - Option for third-party login using Google.
@@ -47,7 +44,7 @@ The  DineEase Hotel Management System is a full-stack web application designed t
 - Generate reports for operational insights.
 
 
-# Tech Stack:
+# Tech Used:
 - Frontend: React.js, Tailwind CSS
 - Backend: Node.js, Express.js
 - Database: MongoDB
@@ -65,7 +62,6 @@ The  DineEase Hotel Management System is a full-stack web application designed t
 - Day 2: High-fidelity design.
 - Day 3: GitHub setup (README).
 - Day 4: Project milestone progress in GitHub.
-
 - Day 5: Backend and frontend setup (ensure folder structure and install dependencies).
 - Day 6: MongoDB connection and .env setup.
 - Day 7: Schema design for users (signup/login, booking) and admins (restaurant stats, info hub, tables, reservations).
@@ -74,13 +70,11 @@ The  DineEase Hotel Management System is a full-stack web application designed t
 - Day 10: PUT APIs (e.g., updating bookings, editing restaurant details).
 - Day 11: DELETE APIs (e.g., deleting bookings, removing restaurant tables).
 - Day 12: Deploy backend and add centralized error handling.
-
 - Day 13: Schema for authentication (user/admin roles, JWT support).
 - Day 14: POST and GET APIs for authentication (signup/login).
 - Day 15: PUT and DELETE APIs for authentication (update/delete accounts).
 - Day 16: Adding Google Auth
 - Day 17: Backend Integration Testing (using Postman/Bruno)
-  
 - Day 18: Creating Reusable Components
 - Day 19: Creating Home Page, User Profile Page
 - Day 20: Creating Signup and Login Pages (Admin, Users)
@@ -91,7 +85,6 @@ The  DineEase Hotel Management System is a full-stack web application designed t
 - Day 25: Implementing POST, GET in Admin-Related Pages (Info Hub, Tables, Reservations)
 - Day 26: Implementing Edit, Delete in Admin-Related Pages (Info Hub, Tables, Reservations)
 - Day 27: Deploy Frontend
-
 - Day 28: Implementing File Upload for Admins (Info Hub Page)
 - Day 29: Completing Any Incomplete Work
 - Day 30: Connecting Backend and Frontend
