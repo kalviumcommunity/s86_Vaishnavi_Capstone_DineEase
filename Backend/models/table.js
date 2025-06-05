@@ -11,7 +11,7 @@ const tableSchema = new mongoose.Schema({
     required: true
   },
   tableNo: {
-    type: String,
+    type: Number,
     required: true
   },
   seatingCapacity: {

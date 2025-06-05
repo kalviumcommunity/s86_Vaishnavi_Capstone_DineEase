@@ -46,6 +46,11 @@ const tableRoutes = require('./routes/tableRoutes');
 app.use('/api/tables', tableRoutes);
 
 
+//reservation routes
+const reservationRoutes = require('./routes/reservationRoutes');
+app.use('/api/reservations', reservationRoutes);
+
+
 app.listen(PORT, () => {
     console.log(`Server is live at http://localhost:${PORT}`);
 });

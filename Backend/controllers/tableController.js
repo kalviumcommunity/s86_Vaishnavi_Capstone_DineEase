@@ -25,3 +25,16 @@ exports.createTable = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+
+// Get all tables for admin
+exports.getTables = async (req, res) => {
+  try {
+    const adminId = req.admin.id;
+    const tables = await Table.find({ adminId });
+    res.status(200).json({ tables });
+  } catch (error) {
+    console.error('Get Tables Error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

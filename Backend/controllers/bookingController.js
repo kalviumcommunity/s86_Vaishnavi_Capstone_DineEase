@@ -33,3 +33,21 @@ exports.createBooking = async (req, res) => {
     res.status(500).json({ message: 'Error creating booking', error: error.message });
   }
 };
+
+// Get My Bookings
+exports.getMyBookings = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const bookings = await Booking.find({ userId });
+
+    if (bookings.length === 0) {
+      return res.status(404).json({ message: "No bookings found" });
+    }
+
+    res.status(200).json({ bookings });
+  } catch (error) {
+    console.error('Get Bookings Error:', error);
+    res.status(500).json({ message: 'Error fetching bookings', error: error.message });
+  }
+};

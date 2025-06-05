@@ -7,6 +7,7 @@ exports.createInfoHub = async (req, res) => {
     const { aboutUs, location, phone, timings, menuImages, restaurantImages } = req.body;
 
     const exists = await InfoHub.findOne({ adminId });
+    
     if (exists) {
       return res.status(400).json({ message: 'Info already exists' });
     }
@@ -26,5 +27,22 @@ exports.createInfoHub = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error creating info', error: error.message });
     console.log('Erround found: ',error)
+  }
+};
+
+
+// Get InfoHub by Admin
+exports.getInfoHub = async (req, res) => {
+  try {
+    const adminId = req.admin.id;
+    const info = await InfoHub.findOne({ adminId });
+
+    if (!info) {
+      return res.status(404).json({ message: 'Info not found' });
+    }
+
+    res.status(200).json({ data: info });
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving info', error: error.message });
   }
 };
