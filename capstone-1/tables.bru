@@ -1,0 +1,26 @@
+meta {
+  name: tables
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:3000/api/tables/6841a4f0e01a4fa0c6f4adde
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDFhM2Y4ZTAxYTRmYTBjNmY0YWRkNyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0OTE0NzQwNSwiZXhwIjoxNzQ5NzUyMjA1fQ.9ltYlNjRm1ewB8i67vswgS-xJr4BgiCqJptUyWNDKp8
+}
+
+body:json {
+  {
+    "adminId": "6841a3f8e01a4fa0c6f4add7",
+        "floorNo": 1,
+        "tableNo": 20,
+        "seatingCapacity": 19,
+        "available": true
+    
+  }
+}
