@@ -1,0 +1,19 @@
+meta {
+  name: user side
+  type: http
+  seq: 1
+}
+
+put {
+  url: http://localhost:3000/api/users/683d7f15813c65656a9e0cc4
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+  "username": "vaishnavi",
+      "email": "vaishnavikalluri@gmail.com",
+      "phone": "9010512345"
+  }
+}

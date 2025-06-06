@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { createInfoHub,getInfoHub} = require('../controllers/infoHubController');
+const { createInfoHub,getInfoHub, editInfoHub} = require('../controllers/infoHubController');
 const verifyAdmin = require('../middleware/verifyAdmin'); 
 
-// adding InfoHub 
+// aroutes 
 router.post('/create', verifyAdmin, createInfoHub);
 router.get('/get', verifyAdmin, getInfoHub);
+router.put('/edit', verifyAdmin, editInfoHub);
 
 
 module.exports = router;

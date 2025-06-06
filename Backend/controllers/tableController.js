@@ -38,3 +38,18 @@ exports.getTables = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+
+// Edit a table
+exports.updateTable = async (req, res) => {
+  try {
+    const tableId = req.params.id;
+    const updates = req.body;
+
+    const updatedTable = await Table.findByIdAndUpdate(tableId, updates, { new: true });
+    res.status(200).json({ message: 'Table updated successfully', data: updatedTable });
+  } catch (error) {
+    console.error('Update Table Error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

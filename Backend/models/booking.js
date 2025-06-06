@@ -1,3 +1,5 @@
+// models/booking.js
+
 const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema(
@@ -35,6 +37,22 @@ const bookingSchema = new mongoose.Schema(
       ref: 'Admin',
       required: true,
     },
+
+    // Reservation management fields
+    status: {
+      type: String,
+      enum: ['pending', 'confirmed', 'cancelled'],
+      default: 'pending'
+    },
+    confirmed: {
+      type: Boolean,
+      default: false
+    },
+    arrivalStatus: {
+      type: String,
+      enum: ['not arrived', 'arriving', 'arrived'],
+      default: 'not arrived'
+    }
   },
   {
     timestamps: true,

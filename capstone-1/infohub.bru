@@ -1,0 +1,27 @@
+meta {
+  name: infohub
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:3000/api/infoHub/edit
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDFhM2Y4ZTAxYTRmYTBjNmY0YWRkNyIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTc0OTE0NzQwNSwiZXhwIjoxNzQ5NzUyMjA1fQ.9ltYlNjRm1ewB8i67vswgS-xJr4BgiCqJptUyWNDKp8
+}
+
+body:json {
+  {
+    "aboutUs": "Welcome to Mehfil restaurant !",
+    "location":"attapur, hyderabad",
+    "timings": "10:00 AM - 3:00 AM",
+    "phone": "7854361290",
+    "menuImages": ["menu1.jpg", "menu2.jpg"],
+    "restaurantImages": ["rest1.jpg", "rest2.jpg"]
+  }
+  
+}
