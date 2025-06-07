@@ -4,16 +4,19 @@ meta {
   seq: 1
 }
 
-put {
-  url: http://localhost:3000/api/users/683d7f15813c65656a9e0cc4
+post {
+  url: http://localhost:3000/api/users/login
   body: json
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDQ3ZTZmNWUxNTgyMWI5NTVhYmQzNSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzQ5MzE5Mjg1LCJleHAiOjE3NDk5MjQwODV9.wY7pyqnPSxiKUajSusRsVIICkC1s76pldTuz0-j-7SQ
 }
 
 body:json {
   {
-  "username": "vaishnavi",
-      "email": "vaishnavikalluri@gmail.com",
-      "phone": "9010512345"
+    "email":"vaishnavikalluri@gmail.com",
+    "password":"vaishnavi"
   }
 }
