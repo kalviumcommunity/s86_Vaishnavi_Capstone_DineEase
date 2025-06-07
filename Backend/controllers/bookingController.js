@@ -48,6 +48,30 @@ exports.getMyBookings = async (req, res) => {
   }
 };
 
+
+
+// Delete  a booking 
+exports.deleteBooking = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const bookingId = req.params.id;
+
+    const booking = await Booking.findOne({ _id: bookingId, userId });
+
+    if (!booking) {
+      return res.status(404).json({ message: 'Booking not found or unauthorized' });
+    }
+
+    await Booking.findByIdAndDelete(bookingId);
+
+    res.status(200).json({ message: 'Booking cancelled successfully' });
+  } catch (error) {
+    console.error('Error cancelling booking:', error);
+    res.status(500).json({ message: 'Error cancelling booking', error: error.message });
+  }
+};
+
+
 // ADMIN-SIDE  RESERVATIONS CONTROLLERS
 
 // Get all pending reservations for a restaurant

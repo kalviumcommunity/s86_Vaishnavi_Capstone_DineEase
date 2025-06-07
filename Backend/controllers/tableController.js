@@ -53,3 +53,16 @@ exports.updateTable = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
+
+
+// Delete a table
+exports.deleteTable = async (req, res) => {
+  try {
+    const tableId = req.params.id;
+    await Table.findByIdAndDelete(tableId);
+    res.status(200).json({ message: 'Table deleted successfully' });
+  } catch (error) {
+    console.error('Delete Table Error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};

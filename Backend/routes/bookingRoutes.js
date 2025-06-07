@@ -8,6 +8,7 @@ const {
   cancelReservation,
   getConfirmedReservations,
   updateArrivalStatus,
+  deleteBooking
 } = require('../controllers/bookingController');
 
 const auth = require('../middleware/auth');       
@@ -16,6 +17,7 @@ const verifyAdmin = require('../middleware/verifyAdmin');
 // USER ROUTES
 router.post('/book', auth, createBooking);
 router.get('/all', auth, getMyBookings);
+router.delete('/:id', auth, deleteBooking);
 
 // ADMIN ROUTES
 router.get('/pending', verifyAdmin, getPendingReservations);              
