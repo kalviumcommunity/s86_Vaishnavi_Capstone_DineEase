@@ -100,3 +100,7 @@ The  DineEase Hotel Management System is a full-stack web application designed t
 - Day 33: Taking Feedback from Peers and Making Necessary Changes
 - Day 34: Testing All APIs Again and Checking for Any Errors
 - Day 35: Submitting Final Work
+
+
+# Deployment link - backend
+https://dineease-ixk0.onrender.com
