@@ -1,0 +1,22 @@
+meta {
+  name: user side
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/api/users/login
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NDQ3ZTZmNWUxNTgyMWI5NTVhYmQzNSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzQ5MzE5Mjg1LCJleHAiOjE3NDk5MjQwODV9.wY7pyqnPSxiKUajSusRsVIICkC1s76pldTuz0-j-7SQ
+}
+
+body:json {
+  {
+    "email":"vaishnavikalluri@gmail.com",
+    "password":"vaishnavi"
+  }
+}
