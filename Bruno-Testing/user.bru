@@ -1,0 +1,24 @@
+meta {
+  name: user
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:3000/api/user/690ad9584c129de2a653f9f6
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Ravi Kumar",
+    "phone": "9876543210",
+    "specialRequest": "Window seat please",
+    "date": "2025-02-15",
+    "time": "07:30 PM",
+    "totalPeople": 4,
+    "restaurantId": "67aed89f1c9a3c5a09123456"
+  }
+  
+}

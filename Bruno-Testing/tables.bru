@@ -1,0 +1,26 @@
+meta {
+  name: tables
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:3000/api/tables/all
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MGFlYWE1ZThkZWEzMDI3Yzk2NjI5ZiIsInJvbGUiOiJyZXN0YXVyYW50IiwiaWF0IjoxNzYyMzIzNzUxLCJleHAiOjE3NjI5Mjg1NTF9.pWt418qiRt6KORo4TVKgTwMmEfp2ekpw7PzyVyARLDs
+}
+
+body:json {
+  {
+  
+    "floorNo": 1,
+    "tableNo": 1,
+    "seatingCapacity": 4,
+    "available": false
+  }
+  
+}

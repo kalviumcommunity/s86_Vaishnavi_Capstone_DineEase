@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const tableSchema = new mongoose.Schema({
-  adminId: {
+  RestaurantId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Admin',
+    ref: 'Restaurant',
     required: true
   },
   floorNo: {

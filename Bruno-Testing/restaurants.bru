@@ -1,0 +1,33 @@
+meta {
+  name: restaurants
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:3000/api/restaurant/690aeaa5e8dea3027c96629f/stats
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MGFlMTZiMTg0NWIzYzM0YmM2OGViNSIsInJvbGUiOiJyZXN0YXVyYW50IiwiaWF0IjoxNzYyMzIxNjQxLCJleHAiOjE3NjI5MjY0NDF9.0yVSEiBd6LH9NIICTqdS0uY309eC0fkhmZCOEAinTP8
+}
+
+body:json {
+  {
+    "aboutUs": "Welcome to Spice Haven — where authentic flavors meet modern dining. We serve premium quality meals with a cozy ambiance.",
+    "timings": "10:00 AM to 11:00 PM",
+    "city": "Hyderabad",
+    "state": "Telangana",
+    "menuimages": [
+      "https://example.com/images/menu1.jpg",
+      "https://example.com/images/menu2.jpg"
+    ],
+    "restaurantImages": [
+      "https://example.com/images/restaurant1.jpg",
+      "https://example.com/images/restaurant2.jpg"
+    ]
+  }
+  
+}
