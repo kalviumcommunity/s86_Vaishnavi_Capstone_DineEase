@@ -1,22 +1,33 @@
 const mongoose = require('mongoose');
 
 const restaurantSchema = new mongoose.Schema({
+
+  name:{
+    type: String,
+    required: true
+  },
+
   email: {
     type: String,
     unique: true,
     required: true,
     lowercase: true
   },
+  password: {
+    type: String,
+    required: true,
+    minlength:8
+  },
   restaurantName: {
     type: String,
     required: true
   },
-  phone: {
+  phoneNumber: {
     type: String,
     required: true,
     minlength:10
   },
-  location: {
+  city: {
     type: String,
     required: true
   },
@@ -24,11 +35,19 @@ const restaurantSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  password: {
+  aboutUs: {
+   type: String,
+   default: 'Enter your Details',
+   required: true,
+  },
+  timings:{
     type: String,
     required: true,
-    minlength:8
-  }
+    default:"9.00 AM to 12.00 PM"
+  },
+  menuimages: [String],
+  restaurantImages: [String]
+
 }, { timestamps: true });
 
 module.exports = mongoose.model('Restaurant', restaurantSchema);

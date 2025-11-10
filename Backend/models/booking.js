@@ -6,7 +6,7 @@ const bookingSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     phone: {
       type: String,
@@ -23,7 +23,7 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    noOfGuests: {
+    totalPeople: {
       type: Number,
       required: true,
     },
@@ -34,7 +34,7 @@ const bookingSchema = new mongoose.Schema(
     },
     restaurantId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Admin',
+      ref: 'Restaurant',
       required: true,
     },
 

@@ -1,0 +1,22 @@
+meta {
+  name: booking
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:3000/api/bookings/confirmed
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MGFlYWE1ZThkZWEzMDI3Yzk2NjI5ZiIsInJvbGUiOiJyZXN0YXVyYW50IiwiaWF0IjoxNzYyMzI0NzkzLCJleHAiOjE3NjI5Mjk1OTN9.t6k6ae_Du_aLbOQFo44nmdkQ2kMeE-hKGFR8cDTTl2Q
+}
+
+body:json {
+  {
+    "arrivalStatus": "arrived"
+  }
+  
+}

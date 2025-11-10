@@ -1,0 +1,49 @@
+meta {
+  name: auth
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:3000/api/auth/signup
+  body: json
+  auth: inherit
+}
+
+body:json {
+  
+  //  {
+  //    "role": "restaurant",
+  // //    "name":"babu",
+  //  "email":"tabala@gmail.com",
+  //    "password":"tabala@12345"
+  // //    "restaurantName":"Tabala",
+  // //    "phoneNumber":"9517368024",
+  // //    "city":"hyd",
+  // //    "state":"ts"
+    
+  //  }
+  
+  
+  //  {
+  //    "role": "user",
+  // //   "userName":"goldi",
+  //   "email":"goldikalluri@gmail.com",
+  // //   "phoneNumber":"7418520369",
+  //   "password":"goldi@123"
+  //  }
+  
+  {
+    "role": "restaurant",
+    "name": "Spice Villa",
+    "email": "spicevilla@gmail.com",
+    "password": "Spice@12345",
+    "restaurantName": "Spice Villa Dining",
+    "phoneNumber": "9123456780",
+    "city": "Delhi",
+    "state": "Delhi"
+  }
+  
+  
+  
+}

@@ -20,28 +20,33 @@ app.get('/', (req, res) => {
 connectDB();
 
 
+//auth routes
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth',authRoutes);
+
+
 //user routes
 const userRoutes = require('./routes/userRoutes');
-app.use('/api/users', userRoutes);
+app.use('/api/user', userRoutes);
 
 //bookings routes(user-side)
 const bookingRoutes = require('./routes/bookingRoutes');
 app.use('/api/bookings', bookingRoutes);
 
-//admin routes
-const adminRoutes = require('./routes/adminRoutes');
-app.use('/api/admins', adminRoutes);
-
-
-//infoHub routes
-const infoHubRoutes = require('./routes/infoHubRoutes');
-app.use('/api/infohub', infoHubRoutes);
+//restaurant routes
+const restaurantRoutes = require('./routes/restaurantRoutes');
+app.use('/api/restaurant', restaurantRoutes);
 
 
 //table routes 
 const tableRoutes = require('./routes/tableRoutes');
 app.use('/api/tables', tableRoutes);
 
+
+const passport = require("passport");
+require("./config/passport");
+
+app.use(passport.initialize());
 
 
 

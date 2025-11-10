@@ -1,88 +1,198 @@
 const User = require('../models/user');
-const Admin = require('../models/admin');
+const Restaurant = require('../models/Restaurant');
 const bcrypt = require('bcryptjs');
+const passport = require('passport')
 const jwt = require('jsonwebtoken');
 
 
-
-// Register User
-exports.userSignup = async (req, res) => {
+// Unified Signup
+exports.signup = async (req, res) => {
   try {
-    const { username, email, phone, password } = req.body;
+    const { role, email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: 'User already exists' });
+    if (!role || !['user', 'restaurant'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role specified' });
+    }
+
+    const Model = role === 'restaurant' ? Restaurant : User;
+
+    const existing = await Model.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ message: `${role} already exists` });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ username, email, phone, password: hashedPassword });
-    await newUser.save();
+    let newEntity;
 
-    res.status(201).json({ message: 'User registered successfully' });
+    if (role === 'user') {
+      const { userName, phoneNumber } = req.body;
+      newEntity = new User({
+        userName,
+        email,
+        phoneNumber,
+        password: hashedPassword,
+        role: "user"
+      });
+    } else {
+      const { name, restaurantName, phoneNumber, city, state } = req.body;
+      newEntity = new Restaurant({
+        name,
+        email,
+        restaurantName,
+        phoneNumber,
+        city,
+        state,
+        password: hashedPassword,
+        role: "restaurant"
+      });
+    }
+
+    await newEntity.save();
+
+    res.status(201).json({
+      message: `${role} registered successfully`,
+      role,
+      id: newEntity._id, 
+      data: {
+        id: newEntity._id,
+        email: newEntity.email,
+        role
+      }
+    });
+
   } catch (err) {
-    console.error('User Registration Error:', err);
+    console.error('Signup Error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-// Login User
-exports.userLogin = async (req, res) => {
-  try {
-    const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+// Unified Login
+exports.login = async (req, res) => {
+  try {
+    const { role, email, password } = req.body;
+
+    if (!role || !['user', 'restaurant'].includes(role)) {
+      return res.status(400).json({ message: 'Invalid role specified' });
+    }
+
+    const Model = role === 'restaurant' ? Restaurant : User;
+    const user = await Model.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid email or password' });
+    }
 
-    const token = jwt.sign({ id: user._id, role: 'user' }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign(
+      { id: user._id, role },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
 
-    res.json({ token, user });
+    const userData = {
+      id: user._id,
+      email: user.email,
+      role,
+    };
+
+    if (role === "restaurant") {
+      userData.name = user.name;
+      userData.restaurantName = user.restaurantName;
+    } else {
+      userData.name = user.userName;
+    }
+
+    return res.status(200).json({
+      message: `${role} login successful`,
+      token,
+      id: user._id,      
+      user: userData
+    });
+
   } catch (err) {
-    console.error('User Login Error:', err);
+    console.error('Login Error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-
-
-// Register Admin (Restaurant)
-exports.adminSignup = async (req, res) => {
+// RESET PASSWORD 
+exports.resetPassword = async (req, res) => {
   try {
-    const { restaurantName, email, phone, location, state, password } = req.body;
+    const { token } = req.params;
+    const { password } = req.body;
 
-    const existingAdmin = await Admin.findOne({ email });
-    if (existingAdmin) return res.status(400).json({ message: 'Admin already exists' });
+    if (!password) {
+      return res.status(400).json({ message: "Password is required" });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const Model = decoded.role === "restaurant" ? Restaurant : User;
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newAdmin = new Admin({ restaurantName, email, phone, location, state, password: hashedPassword });
-    await newAdmin.save();
+    await Model.findByIdAndUpdate(decoded.id, { password: hashedPassword });
 
-    res.status(201).json({ message: 'Admin registered successfully' });
-  } catch (err) {
-    console.error('Admin Registration Error:', err);
-    res.status(500).json({ message: 'Server error' });
+    return res.status(200).json({
+      message: "Password reset successful. Please login again."
+    });
+
+  } catch (error) {
+    return res.status(400).json({ message: "Invalid or expired reset token" });
   }
 };
 
-// Login Admin
-exports.adminLogin = async (req, res) => {
+
+//FORGOT PASSWORD 
+exports.forgotPassword = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, role } = req.body;
 
-    const admin = await Admin.findOne({ email });
-    if (!admin) return res.status(400).json({ message: 'Invalid credentials' });
+    if (!email || !role) {
+      return res.status(400).json({ message: "Email & role are required" });
+    }
 
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+    // Validate role
+    if (!['user', 'restaurant'].includes(role)) {
+      return res.status(400).json({ message: "Invalid role" });
+    }
 
-    const token = jwt.sign({ id: admin._id, role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const Model = role === "restaurant" ? Restaurant : User;
 
-    res.json({ token, admin });
-  } catch (err) {
-    console.error('Admin Login Error:', err);
-    res.status(500).json({ message: 'Server error' });
+    // Check if user exists
+    const user = await Model.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: `${role} not found with this email` });
+    }
+
+    // Create reset token valid for 15 minutes
+    const resetToken = jwt.sign(
+      { id: user._id, role },
+      process.env.JWT_SECRET,
+      { expiresIn: "15m" }
+    );
+
+    const resetLink = `http://localhost:3000/api/auth/reset-password/${resetToken}`;
+
+    // For now show in console (later: email)
+    console.log("🔐 Password Reset Link:", resetLink);
+
+    return res.status(200).json({
+      message: "Password reset link generated. Check console/logs.",
+      resetLink // show in response too for testing
+    });
+
+  } catch (error) {
+    console.error("Forgot Password Error:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
+
+
