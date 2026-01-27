@@ -4,15 +4,15 @@ const Table = require('../models/table');
 exports.createTable = async (req, res) => {
   try {
     const restaurantId = req.user.id; // ✅ logged in restaurant ID
-    const { floorNo, tableNo, seatingCapacity, available } = req.body;
+    const { floor, tableNo, seatingCapacity, available } = req.body;
 
-    if (!floorNo || !tableNo || !seatingCapacity) {
+    if (!floor || !tableNo || !seatingCapacity) {
       return res.status(400).json({ message: 'Please fill all required fields' });
     }
 
     const newTable = new Table({
       RestaurantId: restaurantId, // ✅ correct field name
-      floorNo,
+      floor,
       tableNo,
       seatingCapacity,
       available
@@ -64,6 +64,23 @@ exports.deleteTable = async (req, res) => {
 
   } catch (error) {
     console.error('Delete Table Error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
+// Get tables by restaurant ID (PUBLIC - for users to see available tables)
+exports.getTablesByRestaurant = async (req, res) => {
+  try {
+    const restaurantId = req.params.restaurantId;
+    const tables = await Table.find({ RestaurantId: restaurantId });
+
+    res.status(200).json({ 
+      message: 'Tables fetched successfully',
+      count: tables.length,
+      tables 
+    });
+  } catch (error) {
+    console.error('Get Tables By Restaurant Error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

@@ -4,7 +4,9 @@ const User = require('../models/user');
 // Get User Profile
 exports.getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).select('-password');
+    // Use authenticated user's ID from token
+    const userId = req.user.id;
+    const user = await User.findById(userId).select('-password');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -19,8 +21,10 @@ exports.getUserProfile = async (req, res) => {
 // Update User Profile
 exports.updateUserProfile = async (req, res) => {
   try {
+    // Use authenticated user's ID from token
+    const userId = req.user.id;
     const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
+      userId,
       req.body,
       { new: true }
     ).select('-password');
@@ -43,7 +47,9 @@ exports.updateUserProfile = async (req, res) => {
 // Delete user account
 exports.deleteUser = async (req, res) => {
   try {
-    const removedUser = await User.findByIdAndDelete(req.params.id);
+    // Use authenticated user's ID from token
+    const userId = req.user.id;
+    const removedUser = await User.findByIdAndDelete(userId);
     if (!removedUser) {
       return res.status(404).json({ message: 'User not found' });
     }

@@ -21,6 +21,7 @@ passport.use(
           user = await User.create({
             userName: name,
             email,
+            phoneNumber: "000-000-0000", // Default for OAuth users
             password: "google-auth",
             role: "user",
           });

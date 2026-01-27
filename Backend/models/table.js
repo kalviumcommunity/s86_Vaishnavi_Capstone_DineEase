@@ -6,8 +6,8 @@ const tableSchema = new mongoose.Schema({
     ref: 'Restaurant',
     required: true
   },
-  floorNo: {
-    type: Number,
+  floor: {
+    type: String,
     required: true
   },
   tableNo: {

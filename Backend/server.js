@@ -1,5 +1,7 @@
 const express = require('express');
+const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
 const connectDB = require('./config/db');
 
 
@@ -9,7 +11,14 @@ const app = express();
 const PORT = 3000;
 
 // Middleware
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://localhost:5174'],
+    credentials: true
+}));
 app.use(express.json());
+
+// Serve static files for uploaded images
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 app.get('/', (req, res) => {
@@ -35,7 +44,7 @@ app.use('/api/bookings', bookingRoutes);
 
 //restaurant routes
 const restaurantRoutes = require('./routes/restaurantRoutes');
-app.use('/api/restaurant', restaurantRoutes);
+app.use('/api/restaurants', restaurantRoutes);
 
 
 //table routes 

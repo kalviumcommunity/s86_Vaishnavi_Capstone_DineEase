@@ -30,11 +30,13 @@ exports.createBooking = async (req, res) => {
   }
 };
 
-// Get logged-in user bookings
+// ✅ Get logged-in user bookings
 exports.getMyBookings = async (req, res) => {
   try {
     const userId = req.user.id;
-    const bookings = await Booking.find({ userId });
+    const bookings = await Booking.find({ userId })
+      .populate('restaurantId', 'restaurantName city location state')
+      .sort({ date: -1 });
 
     res.status(200).json({ bookings });
   } catch (error) {
@@ -42,7 +44,7 @@ exports.getMyBookings = async (req, res) => {
   }
 };
 
-// User cancels their booking
+// ✅ User cancels their booking
 exports.deleteBooking = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -54,7 +56,16 @@ exports.deleteBooking = async (req, res) => {
       return res.status(404).json({ message: "Booking not found or unauthorized" });
     }
 
-    await Booking.findByIdAndDelete(bookingId);
+    // If booking is already cancelled, do nothing
+    if (booking.status === 'cancelled') {
+      return res.status(200).json({ message: "Booking already cancelled" });
+    }
+    // Mark as cancelled by user
+    booking.status = 'cancelled';
+    booking.confirmed = false;
+    booking.cancellationSource = 'user';
+    booking.cancellationReason = 'Cancelled by user';
+    await booking.save();
     res.status(200).json({ message: "Booking cancelled successfully" });
 
   } catch (error) {
@@ -62,21 +73,48 @@ exports.deleteBooking = async (req, res) => {
   }
 };
 
-//  RESTAURANT SIDE
+// ----------------- RESTAURANT SIDE -----------------
 
-//Get pending reservations
+// ✅ Get pending reservations
 exports.getPendingBookings = async (req, res) => {
   try {
     const restaurantId = req.user.id;
-    const pending = await Booking.find({ restaurantId, status: "pending" });
+    
+    // Find all pending bookings
+    const pending = await Booking.find({ restaurantId, status: "pending" })
+      .populate('userId', 'name email phone')
+      .sort({ date: 1, time: 1 });
 
-    res.status(200).json({ data: pending });
+    // Auto-cancel expired pending bookings
+    const now = new Date();
+    const updatedPending = [];
+
+    for (const booking of pending) {
+      // Parse booking date and time
+      const bookingDateTime = new Date(booking.date);
+      const [hours, minutes] = booking.time.split(':');
+      bookingDateTime.setHours(parseInt(hours), parseInt(minutes), 0, 0);
+
+      // If booking date/time has passed, auto-cancel it
+      if (bookingDateTime < now) {
+        booking.status = 'cancelled';
+        booking.confirmed = false;
+        booking.cancellationSource = 'restaurant';
+        booking.cancellationReason = 'Restaurant Cancelled - No Tables Available';
+        await booking.save();
+      } else {
+        // Only include non-expired bookings in the response
+        updatedPending.push(booking);
+      }
+    }
+
+    res.status(200).json({ data: updatedPending });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch pending reservations", error: error.message });
   }
 };
 
-//Confirm reservation
+// ✅ Confirm reservation
 exports.confirmBookings = async (req, res) => {
   try {
     const booking = await Booking.findByIdAndUpdate(
@@ -91,26 +129,36 @@ exports.confirmBookings = async (req, res) => {
   }
 };
 
-//Cancel reservation
+// ✅ Cancel reservation
 exports.cancelBookings = async (req, res) => {
   try {
-    const booking = await Booking.findByIdAndUpdate(
-      req.params.id,
-      { confirmed: false, status: "cancelled" },
-      { new: true }
-    );
-
+    // Find the booking first
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) {
+      return res.status(404).json({ message: "Booking not found" });
+    }
+    // If already cancelled, do nothing
+    if (booking.status === 'cancelled') {
+      return res.status(200).json({ message: "Reservation already cancelled", data: booking });
+    }
+    booking.status = 'cancelled';
+    booking.confirmed = false;
+    booking.cancellationSource = 'restaurant';
+    booking.cancellationReason = req.body.reason || 'Cancelled by restaurant';
+    await booking.save();
     res.status(200).json({ message: "Reservation cancelled", data: booking });
   } catch (error) {
     res.status(500).json({ message: "Failed to cancel reservation", error: error.message });
   }
 };
 
-//Get confirmed reservations
+// ✅ Get confirmed reservations
 exports.getConfirmedBookings = async (req, res) => {
   try {
     const restaurantId = req.user.id;
-    const confirmed = await Booking.find({ restaurantId, status: "confirmed" });
+    const confirmed = await Booking.find({ restaurantId, status: "confirmed" })
+      .populate('userId', 'name email phone')
+      .sort({ date: 1, time: 1 });
 
     res.status(200).json({ data: confirmed });
   } catch (error) {
@@ -118,7 +166,7 @@ exports.getConfirmedBookings = async (req, res) => {
   }
 };
 
-//Update arrival status
+// ✅ Update arrival status
 exports.updateArrivalStatus = async (req, res) => {
   try {
     const { arrivalStatus } = req.body;
