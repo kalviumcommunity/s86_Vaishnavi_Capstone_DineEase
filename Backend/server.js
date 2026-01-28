@@ -8,7 +8,7 @@ const connectDB = require('./config/db');
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = 3000; // localhost port value
 
 // Middleware
 app.use(cors({
