@@ -52,6 +52,17 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       enum: ['not arrived', 'arriving', 'arrived'],
       default: 'not arrived'
+    },
+    // Track who cancelled the booking: 'user' or 'restaurant'
+    cancellationSource: {
+      type: String,
+      enum: ['user', 'restaurant', null],
+      default: null
+    },
+    // Reason for cancellation
+    cancellationReason: {
+      type: String,
+      default: null
     }
   },
   {

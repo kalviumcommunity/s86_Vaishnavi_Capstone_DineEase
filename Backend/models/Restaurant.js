@@ -35,6 +35,10 @@ const restaurantSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  location: {
+    type: String,
+    default: ''
+  },
   aboutUs: {
    type: String,
    default: 'Enter your Details',

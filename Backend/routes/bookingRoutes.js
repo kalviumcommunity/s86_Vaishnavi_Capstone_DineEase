@@ -14,12 +14,12 @@ const {
 const auth = require('../middleware/auth');
 const verifyRole = require('../middleware/verifyRole');
 
-//USER ROUTES
+// ✅ USER ROUTES
 router.post('/book', auth, verifyRole("user"), createBooking);
 router.get('/all', auth, verifyRole("user"), getMyBookings);
 router.delete('/:id', auth, verifyRole("user"), deleteBooking);
 
-//RESTAURANT ROUTES
+// ✅ RESTAURANT ROUTES
 router.get('/pending', auth, verifyRole("restaurant"), getPendingBookings);
 router.put('/confirm/:id', auth, verifyRole("restaurant"), confirmBookings);
 router.put('/cancel/:id', auth, verifyRole("restaurant"), cancelBookings);

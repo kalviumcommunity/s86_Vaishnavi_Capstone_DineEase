@@ -60,11 +60,11 @@ exports.getRestaurantStats = async (req, res) => {
   try {
     const restaurantId = req.params.id;
 
-    
+    // ✅ Table Stats
     const totalTables = await Table.countDocuments({ RestaurantId: restaurantId });
     const availableTables = await Table.countDocuments({ RestaurantId: restaurantId, available: true });
 
-  
+    // ✅ Reservation Stats
     const totalReservations = await Booking.countDocuments({ restaurantId });
     const pendingReservations = await Booking.countDocuments({ restaurantId, status: 'pending' });
 
@@ -88,34 +88,149 @@ exports.getRestaurantStats = async (req, res) => {
 //  Update Info Hub
 exports.updateInfoHub = async (req, res) => {
   try {
+    console.log("\n=== UPDATE INFO HUB STARTED ===");
     const restaurantId = req.params.id;
+    console.log("Restaurant ID:", restaurantId);
+    console.log("Request Body:", req.body);
+    console.log("Request Files:", req.files);
+    console.log("Auth User:", req.user);
 
+    // Get existing restaurant data to preserve existing images
+    const existingRestaurant = await Restaurant.findById(restaurantId);
+    if (!existingRestaurant) {
+      return res.status(404).json({ message: "Restaurant not found" });
+    }
+
+    // Build update fields
     const updateFields = {
       aboutUs: req.body.aboutUs,
       timings: req.body.timings,
       city: req.body.city,
       state: req.body.state,
-      menuimages: req.body.menuimages,           // array
-      restaurantImages: req.body.restaurantImages // array
+      location: req.body.location,
+      phoneNumber: req.body.phoneNumber,
     };
+
+    // Handle menu images - use existing images sent from frontend, then add new uploads
+    let menuImagesArray = [];
+    
+    // Add existing images that weren't deleted (sent from frontend)
+    if (req.body.existingMenuImages) {
+      if (Array.isArray(req.body.existingMenuImages)) {
+        menuImagesArray = [...req.body.existingMenuImages];
+      } else {
+        menuImagesArray = [req.body.existingMenuImages];
+      }
+    }
+    console.log("Existing menu images received from frontend:", req.body.existingMenuImages);
+    console.log("Menu images array after adding existing:", menuImagesArray);
+    
+    // Add new uploads
+    if (req.files && req.files.menuimages) {
+      const newMenuImages = req.files.menuimages.map(file => `/uploads/menu-images/${file.filename}`);
+      menuImagesArray = [...menuImagesArray, ...newMenuImages];
+      console.log("New menu images uploaded:", newMenuImages);
+    }
+    updateFields.menuimages = menuImagesArray;
+    console.log("Final menu images array:", menuImagesArray);
+
+    // Handle restaurant images - use existing images sent from frontend, then add new uploads
+    let restaurantImagesArray = [];
+    
+    // Add existing images that weren't deleted (sent from frontend)
+    if (req.body.existingRestaurantImages) {
+      if (Array.isArray(req.body.existingRestaurantImages)) {
+        restaurantImagesArray = [...req.body.existingRestaurantImages];
+      } else {
+        restaurantImagesArray = [req.body.existingRestaurantImages];
+      }
+    }
+    console.log("Existing restaurant images received from frontend:", req.body.existingRestaurantImages);
+    console.log("Restaurant images array after adding existing:", restaurantImagesArray);
+    
+    // Add new uploads
+    if (req.files && req.files.restaurantImages) {
+      const newRestaurantImages = req.files.restaurantImages.map(file => `/uploads/restaurant-images/${file.filename}`);
+      restaurantImagesArray = [...restaurantImagesArray, ...newRestaurantImages];
+      console.log("New restaurant images uploaded:", newRestaurantImages);
+    }
+    updateFields.restaurantImages = restaurantImagesArray;
+    console.log("Final restaurant images array:", restaurantImagesArray);
+    
+    console.log("Update Fields:", updateFields);
 
     const updatedRestaurant = await Restaurant.findByIdAndUpdate(
       restaurantId,
       { $set: updateFields },
-      { new: true }
+      { new: true, runValidators: true }
     ).select('-password');
+    
+    console.log("Updated Restaurant:", updatedRestaurant);
 
-    if (!updatedRestaurant) {
-      return res.status(404).json({ message: "Restaurant not found" });
-    }
-
+    console.log("=== UPDATE INFO HUB SUCCESS ===");
     res.status(200).json({
       message: "Info Hub updated successfully",
       data: updatedRestaurant
     });
 
   } catch (error) {
-    console.error("Update Info Hub Error:", error);
+    console.error("=== UPDATE INFO HUB ERROR ===");
+    console.error("Error:", error);
+    console.error("Error message:", error.message);
+    console.error("Error stack:", error.stack);
     res.status(500).json({ message: "Error updating Info Hub", error: error.message });
+  }
+};
+
+
+// GET - Get all restaurants (PUBLIC - for users to browse)
+exports.getAllRestaurants = async (req, res) => {
+  try {
+    const { state, city, search } = req.query;
+    let query = {};
+
+    // Filter by state if provided
+    if (state) {
+      query.state = { $regex: state, $options: 'i' };
+    }
+
+    // Filter by city if provided
+    if (city) {
+      query.city = { $regex: city, $options: 'i' };
+    }
+
+    // Search by restaurant name if provided
+    if (search) {
+      query.restaurantName = { $regex: search, $options: 'i' };
+    }
+
+    const restaurants = await Restaurant.find(query).select('-password');
+    
+    res.status(200).json({
+      message: 'Restaurants fetched successfully',
+      count: restaurants.length,
+      restaurants
+    });
+  } catch (error) {
+    console.error('Get All Restaurants Error:', error);
+    res.status(500).json({ message: 'Error fetching restaurants', error: error.message });
+  }
+};
+
+
+// GET - Get single restaurant by ID (PUBLIC - for users to view details)
+exports.getRestaurantById = async (req, res) => {
+  try {
+    const restaurant = await Restaurant.findById(req.params.id).select('-password');
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+    res.status(200).json({
+      message: 'Restaurant fetched successfully',
+      restaurant
+    });
+  } catch (error) {
+    console.error('Get Restaurant By ID Error:', error);
+    res.status(500).json({ message: 'Error fetching restaurant', error: error.message });
   }
 };

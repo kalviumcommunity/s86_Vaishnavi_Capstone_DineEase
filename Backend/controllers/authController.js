@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport')
 const jwt = require('jsonwebtoken');
 
+// -------------------- COMMON AUTH HANDLER -------------------- //
 
 // Unified Signup
 exports.signup = async (req, res) => {
@@ -50,15 +51,34 @@ exports.signup = async (req, res) => {
 
     await newEntity.save();
 
+    // Generate token for auto-login after signup
+    const token = jwt.sign(
+      { id: newEntity._id, role },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Prepare user data
+    const userData = {
+      id: newEntity._id,
+      email: newEntity.email,
+      role,
+    };
+
+    if (role === "restaurant") {
+      userData.name = newEntity.name;
+      userData.restaurantName = newEntity.restaurantName;
+      userData.phoneNumber = newEntity.phoneNumber;
+    } else {
+      userData.name = newEntity.userName;
+      userData.phoneNumber = newEntity.phoneNumber;
+    }
+
     res.status(201).json({
       message: `${role} registered successfully`,
-      role,
-      id: newEntity._id, 
-      data: {
-        id: newEntity._id,
-        email: newEntity.email,
-        role
-      }
+      token,
+      id: newEntity._id,
+      user: userData
     });
 
   } catch (err) {
@@ -81,7 +101,7 @@ exports.login = async (req, res) => {
     const user = await Model.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ message: 'Invalid email or password' });
+      return res.status(404).json({ message: 'Account not found. Please create an account first.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -95,6 +115,7 @@ exports.login = async (req, res) => {
       { expiresIn: '7d' }
     );
 
+    // ✅ Clean response object (no nulls)
     const userData = {
       id: user._id,
       email: user.email,
@@ -104,14 +125,16 @@ exports.login = async (req, res) => {
     if (role === "restaurant") {
       userData.name = user.name;
       userData.restaurantName = user.restaurantName;
+      userData.phoneNumber = user.phoneNumber;
     } else {
       userData.name = user.userName;
+      userData.phoneNumber = user.phoneNumber;
     }
 
     return res.status(200).json({
       message: `${role} login successful`,
       token,
-      id: user._id,      
+      id: user._id,      // ✅ easiest way to get id
       user: userData
     });
 
@@ -121,7 +144,7 @@ exports.login = async (req, res) => {
   }
 };
 
-// RESET PASSWORD 
+// =================== RESET PASSWORD ===================
 exports.resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
@@ -150,18 +173,23 @@ exports.resetPassword = async (req, res) => {
 };
 
 
-//FORGOT PASSWORD 
+// =================== FORGOT PASSWORD ===================
 exports.forgotPassword = async (req, res) => {
   try {
-    const { email, role } = req.body;
+    const { email, role, newPassword } = req.body;
 
-    if (!email || !role) {
-      return res.status(400).json({ message: "Email & role are required" });
+    if (!email || !role || !newPassword) {
+      return res.status(400).json({ message: "Email, role, and new password are required" });
     }
 
     // Validate role
     if (!['user', 'restaurant'].includes(role)) {
       return res.status(400).json({ message: "Invalid role" });
+    }
+
+    // Validate password length
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "Password must be at least 6 characters long" });
     }
 
     const Model = role === "restaurant" ? Restaurant : User;
@@ -172,26 +200,26 @@ exports.forgotPassword = async (req, res) => {
       return res.status(404).json({ message: `${role} not found with this email` });
     }
 
-    // Create reset token valid for 15 minutes
-    const resetToken = jwt.sign(
-      { id: user._id, role },
-      process.env.JWT_SECRET,
-      { expiresIn: "15m" }
-    );
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    const resetLink = `http://localhost:3000/api/auth/reset-password/${resetToken}`;
+    // Update password
+    user.password = hashedPassword;
+    await user.save();
 
-    // For now show in console (later: email)
-    console.log("🔐 Password Reset Link:", resetLink);
+    // Verify the update by checking if new password matches
+    const passwordMatches = await bcrypt.compare(newPassword, user.password);
+    if (!passwordMatches) {
+      return res.status(500).json({ message: "Password update verification failed" });
+    }
 
     return res.status(200).json({
-      message: "Password reset link generated. Check console/logs.",
-      resetLink // show in response too for testing
+      message: "Password updated successfully. You can now login with your new password."
     });
 
   } catch (error) {
     console.error("Forgot Password Error:", error);
-    return res.status(500).json({ message: "Server error" });
+    return res.status(500).json({ message: "Server error: " + error.message });
   }
 };
 
