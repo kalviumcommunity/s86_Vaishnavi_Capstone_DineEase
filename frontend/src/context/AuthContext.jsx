@@ -26,6 +26,13 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initializeAuth = () => {
       console.log('🔄 AuthContext: Initializing auth state...');
+      
+      // Set a timeout to force loading to false if it takes too long
+      const timeoutId = setTimeout(() => {
+        console.warn('⚠️ Auth initialization timed out, forcing loading to false');
+        setLoading(false);
+      }, 2000); // 2 second timeout
+      
       try {
         const storedToken = localStorage.getItem('token');
         const storedUser = localStorage.getItem('user');
@@ -34,9 +41,10 @@ export const AuthProvider = ({ children }) => {
         console.log('📦 Stored user:', storedUser ? 'Present' : 'Missing');
 
         if (storedToken && storedUser) {
+          const parsedUser = JSON.parse(storedUser);
           setToken(storedToken);
-          setUser(JSON.parse(storedUser));
-          console.log('✅ Auth state initialized successfully');
+          setUser(parsedUser);
+          console.log('✅ Auth state initialized successfully', parsedUser);
         } else {
           console.log('ℹ️ No stored auth data found');
         }
@@ -45,6 +53,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       } finally {
+        clearTimeout(timeoutId);
         console.log('✅ Setting loading to false');
         setLoading(false);
       }
