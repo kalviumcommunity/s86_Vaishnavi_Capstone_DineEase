@@ -170,7 +170,6 @@ export const AuthProvider = ({ children }) => {
       console.log('AuthContext login called with:', { userData, authToken: authToken ? 'Present' : 'Missing' });
       setToken(authToken);
       setUser(userData);
-      setLoading(false); // ✅ Set loading to false after login
       
       // Store in localStorage
       localStorage.setItem('token', authToken);
@@ -180,7 +179,6 @@ export const AuthProvider = ({ children }) => {
       return true;
     } catch (error) {
       console.error('Login error:', error);
-      setLoading(false); // ✅ Set loading to false even on error
       return false;
     }
   };
@@ -257,7 +255,6 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {console.log('🔍 AuthContext render - loading:', loading, 'user:', user ? 'Present' : 'None')}
       {!loading ? children : <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto"></div>
