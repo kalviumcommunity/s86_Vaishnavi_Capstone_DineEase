@@ -15,35 +15,44 @@ const GoogleCallback = () => {
       const userParam = urlParams.get('user');
       const error = urlParams.get('error');
 
+      console.log('Google Callback - Token:', token ? 'Present' : 'Missing');
+      console.log('Google Callback - User:', userParam ? 'Present' : 'Missing');
+      console.log('Google Callback - Error:', error);
+
       if (error) {
         console.error('Google OAuth error:', error);
         alert('Google authentication failed. Please try again.');
-        navigate('/auth/user');
+        navigate('/user/auth');
         return;
       }
 
       if (token && userParam) {
         try {
           const user = JSON.parse(decodeURIComponent(userParam));
+          console.log('Parsed user data:', user);
           
           // Store auth data in localStorage and context
           localStorage.setItem('token', token);
           localStorage.setItem('user', JSON.stringify(user));
+          console.log('Stored in localStorage successfully');
           
           // Update auth context
-          login(user, token);
+          if (login) {
+            login(user, token);
+          }
           
+          console.log('Navigating to dashboard...');
           // Redirect to user dashboard
           navigate('/user/dashboard', { replace: true });
         } catch (error) {
           console.error('Error parsing user data:', error);
           alert('Authentication failed. Please try again.');
-          navigate('/auth/user');
+          navigate('/user/auth');
         }
       } else {
         console.error('Missing token or user data');
         alert('Authentication failed. Please try again.');
-        navigate('/auth/user');
+        navigate('/user/auth');
       }
     };
 
