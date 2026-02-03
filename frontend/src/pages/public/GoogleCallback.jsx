@@ -10,19 +10,24 @@ const GoogleCallback = () => {
   const hasProcessed = useRef(false); // Prevent double processing
 
   useEffect(() => {
-    // Prevent double execution in React StrictMode or on re-renders
-    if (hasProcessed.current) {
-      console.log('⏭️ Skipping - already processed');
-      return;
-    }
-
     const handleGoogleCallback = async () => {
-      hasProcessed.current = true;
-      
       const urlParams = new URLSearchParams(location.search);
       const token = urlParams.get('token');
       const userParam = urlParams.get('user');
       const error = urlParams.get('error');
+
+      // Create a unique key for this callback attempt
+      const callbackKey = `google_callback_${token?.substring(0, 20)}`;
+      
+      // Check if we've already processed this exact callback
+      if (hasProcessed.current || sessionStorage.getItem(callbackKey)) {
+        console.log('⏭️ Skipping - already processed this callback');
+        return;
+      }
+
+      // Mark as processed immediately
+      hasProcessed.current = true;
+      sessionStorage.setItem(callbackKey, 'processed');
 
       console.log('🔑 Google Callback - Token:', token ? 'Present' : 'Missing');
       console.log('👤 Google Callback - User:', userParam ? 'Present' : 'Missing');
@@ -30,6 +35,7 @@ const GoogleCallback = () => {
 
       if (error) {
         console.error('Google OAuth error:', error);
+        sessionStorage.removeItem(callbackKey);
         alert('Google authentication failed. Please try again.');
         navigate('/user/auth', { replace: true });
         return;
@@ -49,19 +55,18 @@ const GoogleCallback = () => {
           login(user, token);
           console.log('🔄 Auth context updated');
           
-          // Small delay to ensure context update completes
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
           console.log('📍 Navigating to dashboard...');
-          // Redirect to user dashboard
+          // Redirect to user dashboard immediately
           navigate('/user/dashboard', { replace: true });
         } catch (error) {
           console.error('Error parsing user data:', error);
+          sessionStorage.removeItem(callbackKey);
           alert('Authentication failed. Please try again.');
           navigate('/user/auth', { replace: true });
         }
       } else {
         console.error('Missing token or user data');
+        sessionStorage.removeItem(callbackKey);
         alert('Authentication failed. Please try again.');
         navigate('/user/auth', { replace: true });
       }
