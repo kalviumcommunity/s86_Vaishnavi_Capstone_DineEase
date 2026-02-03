@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 
 const Navbar = ({ simple = false }) => {
   return (
-    <nav className="w-full text-white fixed top-0 left-0 z-50 shadow-xl" style={{ backgroundColor: '#2F5249' }}>
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <nav className="w-full text-white fixed top-0 left-0 z-50 shadow-xl h-16" style={{ backgroundColor: '#2F5249' }}>
+      <div className="max-w-7xl mx-auto px-6 h-full flex justify-between items-center">
 
         {/* Logo */}
         <Link to="/" className="text-3xl font-extrabold tracking-wide hover:scale-105 transition-transform">
