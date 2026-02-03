@@ -96,17 +96,19 @@ const RestaurantListPage = () => {
               DineEase
             </Link>
 
-            {/* Back Link */}
-            <Link
-              to={isLoggedIn ? "/user/dashboard" : "/"}
-              className="flex items-center gap-2 px-4 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
-              style={{ backgroundColor: '#E8D77D', color: '#2F5249' }}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
-              </svg>
-              {isLoggedIn ? "Dashboard" : "Home"}
-            </Link>
+            {/* Back to Dashboard Button - Only show if logged in */}
+            {isLoggedIn && (
+              <Link
+                to="/user/dashboard"
+                className="flex items-center gap-2 px-4 py-2 rounded-full font-semibold transition-all duration-300 hover:scale-105"
+                style={{ backgroundColor: '#E8D77D', color: '#2F5249' }}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                </svg>
+                Dashboard
+              </Link>
+            )}
           </div>
 
           <div className="flex items-center gap-6">
@@ -122,93 +124,26 @@ const RestaurantListPage = () => {
             
             {/* Profile Icon - Only show if logged in */}
             {isLoggedIn && (
-            <div className="relative">
-            <button
-              onClick={() => setShowProfileMenu(!showProfileMenu)}
-              className="flex items-center justify-center w-10 h-10 rounded-full font-bold transition-all duration-300 transform hover:scale-110 hover:rotate-12"
-              style={{ backgroundColor: '#E8D77D', color: '#2F5249' }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-6 h-6"
+              <Link
+                to="/user/profile"
+                className="flex items-center justify-center w-10 h-10 rounded-full font-bold transition-all duration-300 transform hover:scale-110 hover:rotate-12"
+                style={{ backgroundColor: '#E8D77D', color: '#2F5249' }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-            </button>
-
-            {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-xl shadow-2xl py-2 z-50 border-2 animate-fade-in" style={{ borderColor: '#97B067' }}>
-                <Link
-                  to="/user/dashboard"
-                  className="block px-4 py-2 transition-all duration-300 rounded-lg mx-2 hover:scale-105"
-                  style={{ color: '#2F5249' }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = '#97B067';
-                    e.target.style.color = 'white';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = '#2F5249';
-                  }}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
                 >
-                  🏠 Dashboard
-                </Link>
-                <Link
-                  to="/user/profile"
-                  className="block px-4 py-2 transition-all duration-300 rounded-lg mx-2 hover:scale-105"
-                  style={{ color: '#2F5249' }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = '#97B067';
-                    e.target.style.color = 'white';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = '#2F5249';
-                  }}
-                >
-                  👤 Profile
-                </Link>
-                <Link
-                  to="/user/bookings"
-                  className="block px-4 py-2 transition-all duration-300 rounded-lg mx-2 hover:scale-105"
-                  style={{ color: '#2F5249' }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = '#97B067';
-                    e.target.style.color = 'white';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = '#2F5249';
-                  }}
-                >
-                  📅 My Bookings
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 transition-all duration-300 rounded-lg mx-2 hover:scale-105"
-                  style={{ color: '#2F5249' }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = '#E8D77D';
-                    e.target.style.color = '#2F5249';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = 'transparent';
-                    e.target.style.color = '#2F5249';
-                  }}
-                >
-                  🚪 Logout
-                </button>
-              </div>
-            )}
-          </div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                  />
+                </svg>
+              </Link>
             )}
           </div>
         </div>

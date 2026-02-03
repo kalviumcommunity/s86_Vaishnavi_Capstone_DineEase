@@ -112,56 +112,39 @@ const UserProfile = () => {
             DineEase.com
           </Link>
 
-          {/* Profile Icon */}
-          <div className="relative">
-            <button
-              onClick={() => setShowProfileMenu(!showProfileMenu)}
-              className="flex items-center justify-center w-10 h-10 rounded-full font-bold transition-all duration-300 transform hover:scale-110 hover:rotate-12"
-              style={{ backgroundColor: '#E8D77D', color: '#2F5249' }}
+          {/* Nav Links and Profile */}
+          <div className="flex items-center gap-6">
+            <Link
+              to="/user/dashboard"
+              className="text-lg font-semibold text-white hover:opacity-80 transition-all duration-300"
+              style={{ color: '#E8D77D' }}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2}
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                />
-              </svg>
-            </button>
+              Dashboard
+            </Link>
 
-            {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white text-gray-800 rounded-xl shadow-2xl py-2 z-50 border-2 animate-fade-in" style={{ borderColor: '#97B067' }}>
-                <Link
-                  to="/user/dashboard"
-                  className="block px-4 py-2 transition-all duration-300 rounded-lg mx-2 hover:scale-105"
-                  onClick={() => setShowProfileMenu(false)}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#E8D77D40';
-                    e.currentTarget.style.color = '#437057';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = '';
-                  }}
+            {/* Profile Icon */}
+            <div className="relative">
+              <button
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                className="flex items-center justify-center w-10 h-10 rounded-full font-bold transition-all duration-300 transform hover:scale-110 hover:rotate-12"
+                style={{ backgroundColor: '#E8D77D', color: '#2F5249' }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-6 h-6"
                 >
-                  Dashboard
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="block w-full text-left px-4 py-2 transition-all duration-300 rounded-lg mx-2 text-red-600 hover:scale-105"
-                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#ffebee'}
-                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-                >
-                  Logout
-                </button>
-              </div>
-            )}
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </header>

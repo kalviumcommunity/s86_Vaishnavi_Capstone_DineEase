@@ -17,7 +17,7 @@ import state5 from "../../assets/images/goa.jpeg";
 const HomePage = () => {
   const [showAll, setShowAll] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const [stats, setStats] = useState({ restaurants: 0, bookings: 0, users: 0, cities: 0 });
+  const [stats, setStats] = useState({ restaurants: 0, bookings: 0, states: 0, rating: 0 });
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -31,7 +31,7 @@ const HomePage = () => {
     const steps = 60;
     const interval = duration / steps;
     
-    const targets = { restaurants: 500, bookings: 10000, users: 5000, cities: 25 };
+    const targets = { restaurants: 500, bookings: 10000, states: 28, rating: 4.8 };
     let currentStep = 0;
 
     const timer = setInterval(() => {
@@ -41,8 +41,8 @@ const HomePage = () => {
       setStats({
         restaurants: Math.floor(targets.restaurants * progress),
         bookings: Math.floor(targets.bookings * progress),
-        users: Math.floor(targets.users * progress),
-        cities: Math.floor(targets.cities * progress),
+        states: Math.floor(targets.states * progress),
+        rating: parseFloat((targets.rating * progress).toFixed(1)),
       });
 
       if (currentStep >= steps) {
@@ -92,11 +92,11 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="pt-16 bg-gradient-to-b from-white via-green-50 to-yellow-50">
+    <div className="min-h-screen w-full bg-gradient-to-b from-white via-green-50 to-yellow-50">
         <><Navbar />
 
       {/* ⭐ HERO SECTION */}
-      <section className="max-w-7xl mx-auto px-6 py-20 grid md:grid-cols-2 gap-12 items-center">
+      <section className="max-w-7xl mx-auto px-6 py-20 pt-28 grid md:grid-cols-2 gap-12 items-center">
 
         {/* Left image */}
         <div 
@@ -114,17 +114,15 @@ const HomePage = () => {
 
         {/* Right text */}
         <div className="space-y-6 animate-fade-in">
-          <div className="inline-block px-4 py-2 rounded-full text-sm font-semibold mb-4" style={{ backgroundColor: '#E8D77D', color: '#2F5249' }}>
-            🎉 India's Premier Table Booking Platform
-          </div>
+          
           
           <h1 className="text-6xl font-extrabold text-gray-900 leading-tight">
             Dine the <span style={{ color: '#437057' }}>Smart</span> Way
           </h1>
 
           <p className="text-xl text-gray-600 leading-relaxed">
-            Seamlessly book tables at the best restaurants across all states. 
-            Experience dining like never before with real-time reservations and exclusive offers.
+            Seamlessly book tables at the best restaurants across states. 
+            Experience dining like never before with real-time reservations.
           </p>
 
           <div className="flex gap-4 pt-4">
@@ -146,26 +144,6 @@ const HomePage = () => {
             >
               Learn More →
             </a>
-          </div>
-
-          {/* Stats Preview */}
-          <div className="grid grid-cols-4 gap-4 pt-8">
-            <div className="text-center">
-              <div className="text-3xl font-bold" style={{ color: '#437057' }}>{stats.restaurants}+</div>
-              <div className="text-sm text-gray-600">Restaurants</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold" style={{ color: '#437057' }}>{stats.bookings.toLocaleString()}+</div>
-              <div className="text-sm text-gray-600">Bookings</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold" style={{ color: '#437057' }}>{stats.users}+</div>
-              <div className="text-sm text-gray-600">Happy Users</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold" style={{ color: '#437057' }}>{stats.cities}+</div>
-              <div className="text-sm text-gray-600">Cities</div>
-            </div>
           </div>
         </div>
       </section>

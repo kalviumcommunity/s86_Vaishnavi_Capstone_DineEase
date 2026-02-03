@@ -270,7 +270,7 @@ const UserDashboard = () => {
             {/* Quick Stats Cards */}
             <div className="group rounded-2xl p-8 shadow-xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105" style={{ backgroundColor: '#437057' }}>
               <div className="text-5xl mb-4 text-center group-hover:scale-125 transition-transform duration-300">🍽️</div>
-              <h3 className="text-4xl font-bold text-center mb-2" style={{ color: '#E8D77D' }}>50+</h3>
+              <h3 className="text-4xl font-bold text-center mb-2" style={{ color: '#E8D77D' }}>10+</h3>
               <p className="text-center text-white text-lg">Partner Restaurants</p>
             </div>
 
@@ -281,9 +281,9 @@ const UserDashboard = () => {
             </div>
 
             <div className="group rounded-2xl p-8 shadow-xl transition-all duration-500 transform hover:-translate-y-2 hover:scale-105" style={{ backgroundColor: '#E8D77D' }}>
-              <div className="text-5xl mb-4 text-center group-hover:scale-125 transition-transform duration-300">⭐</div>
-              <h3 className="text-4xl font-bold text-center mb-2" style={{ color: '#2F5249' }}>4.4/5</h3>
-              <p className="text-center font-semibold text-lg" style={{ color: '#2F5249' }}>Average Rating</p>
+              <div className="text-5xl mb-4 text-center group-hover:scale-125 transition-transform duration-300">🎉</div>
+              <h3 className="text-4xl font-bold text-center mb-2" style={{ color: '#2F5249' }}>24/7</h3>
+              <p className="text-center font-semibold text-lg" style={{ color: '#2F5249' }}>Support Available</p>
             </div>
           </div>
         </div>
