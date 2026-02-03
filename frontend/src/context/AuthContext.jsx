@@ -25,19 +25,27 @@ export const AuthProvider = ({ children }) => {
   // Initialize auth state from localStorage
   useEffect(() => {
     const initializeAuth = () => {
+      console.log('🔄 AuthContext: Initializing auth state...');
       try {
         const storedToken = localStorage.getItem('token');
         const storedUser = localStorage.getItem('user');
 
+        console.log('📦 Stored token:', storedToken ? 'Present' : 'Missing');
+        console.log('📦 Stored user:', storedUser ? 'Present' : 'Missing');
+
         if (storedToken && storedUser) {
           setToken(storedToken);
           setUser(JSON.parse(storedUser));
+          console.log('✅ Auth state initialized successfully');
+        } else {
+          console.log('ℹ️ No stored auth data found');
         }
       } catch (error) {
-        console.error('Error initializing auth:', error);
+        console.error('❌ Error initializing auth:', error);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
       } finally {
+        console.log('✅ Setting loading to false');
         setLoading(false);
       }
     };
@@ -150,16 +158,20 @@ export const AuthProvider = ({ children }) => {
    */
   const login = (userData, authToken) => {
     try {
+      console.log('AuthContext login called with:', { userData, authToken: authToken ? 'Present' : 'Missing' });
       setToken(authToken);
       setUser(userData);
+      setLoading(false); // ✅ Set loading to false after login
       
       // Store in localStorage
       localStorage.setItem('token', authToken);
       localStorage.setItem('user', JSON.stringify(userData));
       
+      console.log('AuthContext login completed successfully');
       return true;
     } catch (error) {
       console.error('Login error:', error);
+      setLoading(false); // ✅ Set loading to false even on error
       return false;
     }
   };
@@ -236,7 +248,13 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {console.log('🔍 AuthContext render - loading:', loading, 'user:', user ? 'Present' : 'None')}
+      {!loading ? children : <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Initializing auth...</p>
+        </div>
+      </div>}
     </AuthContext.Provider>
   );
 };
