@@ -106,7 +106,8 @@ const UserAuth = () => {
 	};
 
 	const handleGoogleAuth = () => {
-		window.location.href = "http://localhost:3000/api/auth/google";
+		const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
+		window.location.href = `${backendUrl}/api/auth/google`;
 	};
 
 	return (
