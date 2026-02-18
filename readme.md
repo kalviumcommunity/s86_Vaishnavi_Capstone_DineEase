@@ -52,6 +52,7 @@ The  DineEase Hotel Management System is a full-stack web application designed t
 - Backend: Node.js, Express.js
 - Database: MongoDB
 - Authentication: JSON Web Tokens
+- Image Storage: Cloudinary (See [CLOUDINARY_SETUP.md](CLOUDINARY_SETUP.md) for setup instructions)
 - Other Tools:
   Git & GitHub for version control
   Bruno for API testing

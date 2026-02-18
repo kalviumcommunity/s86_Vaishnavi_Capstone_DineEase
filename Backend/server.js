@@ -27,8 +27,9 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Serve static files for uploaded images
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Note: Static file serving for uploads is now handled by Cloudinary
+// Uncomment below if you need to serve local uploads
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 app.get('/', (req, res) => {

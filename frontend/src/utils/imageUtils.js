@@ -8,20 +8,28 @@ const BACKEND_URL = 'http://localhost:3000';
  * @returns {string} Full URL to access the image
  */
 export const getImageUrl = (imagePath) => {
-  if (!imagePath) return '';
+  if (!imagePath) {
+    console.warn('getImageUrl called with empty imagePath');
+    return '';
+  }
   
   // If already a full URL, return as is
   if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    console.log('getImageUrl: Cloudinary/external URL detected:', imagePath);
     return imagePath;
   }
   
   // If path starts with /, just prepend backend URL
   if (imagePath.startsWith('/')) {
-    return `${BACKEND_URL}${imagePath}`;
+    const fullUrl = `${BACKEND_URL}${imagePath}`;
+    console.log('getImageUrl: Local path with /, converted to:', fullUrl);
+    return fullUrl;
   }
   
   // Otherwise, add /uploads/ prefix
-  return `${BACKEND_URL}/uploads/${imagePath}`;
+  const fullUrl = `${BACKEND_URL}/uploads/${imagePath}`;
+  console.log('getImageUrl: Relative path, converted to:', fullUrl);
+  return fullUrl;
 };
 
 /**
