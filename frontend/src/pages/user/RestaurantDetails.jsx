@@ -49,6 +49,19 @@ const RestaurantDetails = () => {
       console.log('Restaurant data received:', response.restaurant);
       console.log('Menu images:', response.restaurant?.menuimages);
       console.log('Restaurant images:', response.restaurant?.restaurantImages);
+      
+      // Log individual image URLs for debugging
+      if (response.restaurant?.menuimages) {
+        response.restaurant.menuimages.forEach((img, i) => {
+          console.log(`Menu Image ${i + 1}:`, img);
+        });
+      }
+      if (response.restaurant?.restaurantImages) {
+        response.restaurant.restaurantImages.forEach((img, i) => {
+          console.log(`Restaurant Image ${i + 1}:`, img);
+        });
+      }
+      
       setRestaurant(response.restaurant);
     } catch (err) {
       console.error("Error fetching restaurant:", err);
@@ -301,7 +314,7 @@ const RestaurantDetails = () => {
                 <h2 className="text-3xl font-bold mb-4" style={{ color: '#2F5249' }}>
                   About Us
                 </h2>
-                <p className="text-gray-700 leading-relaxed text-lg">
+                <p className="text-gray-700 leading-relaxed text-lg" style={{ wordBreak: 'break-word', overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}>
                   {restaurant.aboutUs}
                 </p>
               </div>
@@ -329,24 +342,33 @@ const RestaurantDetails = () => {
                   
                   {/* Images Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {restaurant.menuimages.slice(menuCarouselIndex, menuCarouselIndex + 3).map((image, index) => (
-                      <div
-                        key={menuCarouselIndex + index}
-                        className="rounded-xl overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:scale-105 border-2"
-                        style={{ borderColor: '#97B067' }}
-                        onClick={() => setSelectedImage(getImageUrl(image))}
-                      >
-                        <img
-                          src={getImageUrl(image)}
-                          alt={`Menu ${menuCarouselIndex + index + 1}`}
-                          className="w-full h-64 object-cover"
-                          onError={(e) => {
-                            console.error('Failed to load menu image:', image);
-                            e.target.src = getPlaceholderImage('menu');
-                          }}
-                        />
-                      </div>
-                    ))}
+                    {restaurant.menuimages.slice(menuCarouselIndex, menuCarouselIndex + 3).map((image, index) => {
+                      const imageUrl = getImageUrl(image);
+                      console.log(`Rendering menu image ${menuCarouselIndex + index + 1}:`, { original: image, processed: imageUrl });
+                      return (
+                        <div
+                          key={menuCarouselIndex + index}
+                          className="rounded-xl overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:scale-105 border-2"
+                          style={{ borderColor: '#97B067' }}
+                          onClick={() => setSelectedImage(imageUrl)}
+                        >
+                          <img
+                            src={imageUrl}
+                            alt={`Menu ${menuCarouselIndex + index + 1}`}
+                            className="w-full h-64 object-cover"
+                            onLoad={(e) => console.log(`Menu image ${menuCarouselIndex + index + 1} loaded successfully`)}
+                            onError={(e) => {
+                              console.error('Failed to load menu image:', {
+                                original: image,
+                                processed: imageUrl,
+                                error: e
+                              });
+                              e.target.src = getPlaceholderImage('menu');
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
                   </div>
                   
                   {/* Next Button */}
@@ -396,24 +418,33 @@ const RestaurantDetails = () => {
                   
                   {/* Images Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {restaurant.restaurantImages.slice(restaurantCarouselIndex, restaurantCarouselIndex + 3).map((image, index) => (
-                      <div
-                        key={restaurantCarouselIndex + index}
-                        className="aspect-square rounded-xl overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:scale-105 border-2"
-                        style={{ borderColor: '#97B067' }}
-                        onClick={() => setSelectedImage(getImageUrl(image))}
-                      >
-                        <img
-                          src={getImageUrl(image)}
-                          alt={`${restaurant.restaurantName} - ${restaurantCarouselIndex + index + 1}`}
-                          className="w-full h-full object-cover"
-                          onError={(e) => {
-                            console.error('Failed to load restaurant image:', image);
-                            e.target.src = getPlaceholderImage('restaurant');
-                          }}
-                        />
-                      </div>
-                    ))}
+                    {restaurant.restaurantImages.slice(restaurantCarouselIndex, restaurantCarouselIndex + 3).map((image, index) => {
+                      const imageUrl = getImageUrl(image);
+                      console.log(`Rendering restaurant image ${restaurantCarouselIndex + index + 1}:`, { original: image, processed: imageUrl });
+                      return (
+                        <div
+                          key={restaurantCarouselIndex + index}
+                          className="aspect-square rounded-xl overflow-hidden shadow-lg cursor-pointer transition-all duration-300 hover:scale-105 border-2"
+                          style={{ borderColor: '#97B067' }}
+                          onClick={() => setSelectedImage(imageUrl)}
+                        >
+                          <img
+                            src={imageUrl}
+                            alt={`${restaurant.restaurantName} - ${restaurantCarouselIndex + index + 1}`}
+                            className="w-full h-full object-cover"
+                            onLoad={(e) => console.log(`Restaurant image ${restaurantCarouselIndex + index + 1} loaded successfully`)}
+                            onError={(e) => {
+                              console.error('Failed to load restaurant image:', {
+                                original: image,
+                                processed: imageUrl,
+                                error: e
+                              });
+                              e.target.src = getPlaceholderImage('restaurant');
+                            }}
+                          />
+                        </div>
+                      );
+                    })}
                   </div>
                   
                   {/* Next Button */}

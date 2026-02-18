@@ -125,9 +125,18 @@ exports.updateInfoHub = async (req, res) => {
     console.log("Existing menu images received from frontend:", req.body.existingMenuImages);
     console.log("Menu images array after adding existing:", menuImagesArray);
     
-    // Add new uploads
+    // Add new uploads (Cloudinary URLs)
     if (req.files && req.files.menuimages) {
-      const newMenuImages = req.files.menuimages.map(file => `/uploads/menu-images/${file.filename}`);
+      console.log("Files object for menuimages:", req.files.menuimages);
+      const newMenuImages = req.files.menuimages.map(file => {
+        console.log("Menu image file details:", {
+          fieldname: file.fieldname,
+          originalname: file.originalname,
+          path: file.path,
+          filename: file.filename
+        });
+        return file.path;
+      });
       menuImagesArray = [...menuImagesArray, ...newMenuImages];
       console.log("New menu images uploaded:", newMenuImages);
     }
@@ -148,9 +157,18 @@ exports.updateInfoHub = async (req, res) => {
     console.log("Existing restaurant images received from frontend:", req.body.existingRestaurantImages);
     console.log("Restaurant images array after adding existing:", restaurantImagesArray);
     
-    // Add new uploads
+    // Add new uploads (Cloudinary URLs)
     if (req.files && req.files.restaurantImages) {
-      const newRestaurantImages = req.files.restaurantImages.map(file => `/uploads/restaurant-images/${file.filename}`);
+      console.log("Files object for restaurantImages:", req.files.restaurantImages);
+      const newRestaurantImages = req.files.restaurantImages.map(file => {
+        console.log("Restaurant image file details:", {
+          fieldname: file.fieldname,
+          originalname: file.originalname,
+          path: file.path,
+          filename: file.filename
+        });
+        return file.path;
+      });
       restaurantImagesArray = [...restaurantImagesArray, ...newRestaurantImages];
       console.log("New restaurant images uploaded:", newRestaurantImages);
     }
